@@ -20,7 +20,24 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'organizational_unit_id',
+        'position_id',
+        'central_phone',
+        'extension',
+        'photo',
+        'role',
+        'status',
     ];
+
+    public function organizational_unit()
+    {
+        return $this->belongsTo(OrganizationalUnit::class);
+    }
+
+    public function position()
+    {
+        return $this->belongsTo(Position::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,4 +61,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
 }
