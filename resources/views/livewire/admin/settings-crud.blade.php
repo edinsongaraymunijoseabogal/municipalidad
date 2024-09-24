@@ -37,45 +37,47 @@
                         <form wire:submit.prevent="saveGeneralSettings">
                             <div class="row">
                                 <div class="col-12 col-md-6 mb-3">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <label for="site_logo" class="form-label">{{ __('Site Logo') }}</label>
-                                            <input accept="image/*" type="file" wire:model="new_site_logo"
-                                                class="form-control">
-                                        </div>
-                                        <div class="col-4 text-center">
-                                            @if ($new_site_logo)
-                                                <img src="{{ $new_site_logo->temporaryUrl() }}" alt="Preview Logo"
-                                                    class="mt-2 img-thumbnail" width="100">
-                                            @elseif ($site_logo)
-                                                <img src="{{ Storage::url($site_logo) }}" alt="Current Logo"
-                                                    class="mt-2 img-thumbnail" width="100">
-                                            @endif
-                                            @error('new_site_logo')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                    <label for="site_logo" class="form-label">{{ __('Site Logo') }}</label>
+                                    <div class="dropzone"
+                                        style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;"
+                                        onclick="document.getElementById('logoImage').click();">
+                                        @if ($site_logo && !is_string($site_logo))
+                                            <img src="{{ $site_logo->temporaryUrl() }}" alt="{{ __('Site Logo') }}"
+                                                style="max-height: 150px;">
+                                        @elseif($existing_site_logo)
+                                            <img src="{{ Storage::url($existing_site_logo) }}"
+                                                alt="{{ __('Site Logo') }}" class="img-fluid rounded"
+                                                style="max-height: 150px;">
+                                        @else
+                                            <p>{{ __('Drag & Drop an image, click to upload') }}</p>
+                                        @endif
+                                        <input type="file" id="logoImage" wire:model="site_logo"
+                                            style="display: none;" accept="image/*" />
                                     </div>
+                                    @error('site_logo')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                                 <div class="col-12 col-md-6 mb-3">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <label for="site_favicon" class="form-label">{{ __('Favicon') }}</label>
-                                            <input accept="image/*" type="file" wire:model="new_site_favicon"
-                                                class="form-control">
-                                        </div>
-                                        <div class="col-4 text-center">
-                                            @if ($new_site_favicon)
-                                                <img src="{{ $new_site_favicon->temporaryUrl() }}"
-                                                    alt="Preview Favicon" class="mt-2 img-thumbnail" width="100">
-                                            @elseif ($site_favicon)
-                                                <img src="{{ Storage::url($site_favicon) }}" alt="Current Favicon"
-                                                    class="mt-2 img-thumbnail" width="100">
-                                            @endif
-                                        </div>
+                                    <label for="site_favicon" class="form-label">{{ __('Site Logo') }}</label>
+                                    <div class="dropzone"
+                                        style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;"
+                                        onclick="document.getElementById('faviconImage').click();">
+                                        @if ($site_favicon && !is_string($site_favicon))
+                                            <img src="{{ $site_favicon->temporaryUrl() }}"
+                                                alt="{{ __('Site Favicon') }}" style="max-height: 150px;">
+                                        @elseif($existing_site_favicon)
+                                            <img src="{{ Storage::url($existing_site_favicon) }}"
+                                                alt="{{ __('Site Favicon') }}" class="img-fluid rounded"
+                                                style="max-height: 150px;">
+                                        @else
+                                            <p>{{ __('Drag & Drop an image, click to upload') }}</p>
+                                        @endif
+                                        <input type="file" id="faviconImage" wire:model="site_favicon"
+                                            style="display: none;" accept="image/*" />
                                     </div>
-                                    @error('new_site_favicon')
+                                    @error('site_favicon')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -150,30 +152,31 @@
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="mb-3 row">
-                                                <div class="col-8">
-                                                    <label for="about_us_image"
-                                                        class="form-label">{{ __('About Us Image') }}</label>
-                                                    <input accept="image/*" type="file"
-                                                        wire:model="new_about_us_image" class="form-control">
+                                            <div class="mb-3">
+                                                <label for="about_us_image"
+                                                    class="form-label">{{ __('About Us Image') }}</label>
+                                                <div class="dropzone"
+                                                    style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;"
+                                                    onclick="document.getElementById('aboutUsImage').click();">
+                                                    @if ($about_us_image && !is_string($about_us_image))
+                                                        <img src="{{ $about_us_image->temporaryUrl() }}"
+                                                            alt="{{ __('About Us Image') }}"
+                                                            style="max-height: 150px;">
+                                                    @elseif($existing_about_us_image)
+                                                        <img src="{{ Storage::url($existing_about_us_image) }}"
+                                                            alt="{{ __('About Us Image') }}"
+                                                            class="img-fluid rounded" style="max-height: 150px;">
+                                                    @else
+                                                        <p>{{ __('Drag & Drop an image, click to upload') }}</p>
+                                                    @endif
+                                                    <input type="file" id="aboutUsImage"
+                                                        wire:model="about_us_image" style="display: none;"
+                                                        accept="image/*" />
                                                 </div>
-                                                <div class="col-4">
-                                                    <div class="text-center">
-                                                        @if ($new_about_us_image)
-                                                            <img src="{{ $new_about_us_image->temporaryUrl() }}"
-                                                                alt="Preview About Us Image"
-                                                                class="mt-2 img-thumbnail" width="100">
-                                                        @elseif ($about_us_image)
-                                                            <img src="{{ Storage::url($about_us_image) }}"
-                                                                alt="Current About Us Image"
-                                                                class="mt-2 img-thumbnail" width="100">
-                                                        @endif
-                                                    </div>
-                                                </div>
+                                                @error('about_us_image')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                            @error('new_about_us_image')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
                                         </div>
                                     </div>
                                     <hr class="my-4">
@@ -193,15 +196,29 @@
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                                 <div class="mt-2">
-                                                    @if ($mission_image)
-                                                        <img src="{{ $mission_image->temporaryUrl() }}"
-                                                            alt="Mission Image Preview" class="img-thumbnail"
-                                                            width="200">
-                                                    @elseif ($existing_mission_image)
-                                                        <img src="{{ Storage::url($existing_mission_image) }}"
-                                                            alt="Current Mission Image" class="img-thumbnail"
-                                                            width="200">
-                                                    @endif
+                                                    <label for="mission_image"
+                                                        class="form-label">{{ __('Mission Image') }}</label>
+                                                    <div class="dropzone"
+                                                        style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;"
+                                                        onclick="document.getElementById('missionImage').click();">
+                                                        @if ($mission_image && !is_string($mission_image))
+                                                            <img src="{{ $mission_image->temporaryUrl() }}"
+                                                                alt="{{ __('Mission Image') }}"
+                                                                style="max-height: 150px;">
+                                                        @elseif($existing_mission_image)
+                                                            <img src="{{ Storage::url($existing_mission_image) }}"
+                                                                alt="{{ __('Mission Image') }}"
+                                                                class="img-fluid rounded" style="max-height: 150px;">
+                                                        @else
+                                                            <p>{{ __('Drag & Drop an image, click to upload') }}</p>
+                                                        @endif
+                                                        <input type="file" id="missionImage"
+                                                            wire:model="mission_image" style="display: none;"
+                                                            accept="image/*" />
+                                                    </div>
+                                                    @error('mission_image')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -223,15 +240,29 @@
                                                 @enderror
 
                                                 <div class="mt-2">
-                                                    @if ($vision_image)
-                                                        <img src="{{ $vision_image->temporaryUrl() }}"
-                                                            alt="Vision Image Preview" class="img-thumbnail"
-                                                            width="200">
-                                                    @elseif ($existing_vision_image)
-                                                        <img src="{{ Storage::url($existing_vision_image) }}"
-                                                            alt="Current Vision Image" class="img-thumbnail"
-                                                            width="200">
-                                                    @endif
+                                                    <label for="vision_image"
+                                                        class="form-label">{{ __('Vision Image') }}</label>
+                                                    <div class="dropzone"
+                                                        style="border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer;"
+                                                        onclick="document.getElementById('vision_image').click();">
+                                                        @if ($vision_image && !is_string($vision_image))
+                                                            <img src="{{ $vision_image->temporaryUrl() }}"
+                                                                alt="{{ __('Vision Image') }}"
+                                                                style="max-height: 150px;">
+                                                        @elseif($existing_vision_image)
+                                                            <img src="{{ Storage::url($existing_vision_image) }}"
+                                                                alt="{{ __('Vision Image') }}"
+                                                                class="img-fluid rounded" style="max-height: 150px;">
+                                                        @else
+                                                            <p>{{ __('Drag & Drop an image, click to upload') }}</p>
+                                                        @endif
+                                                        <input type="file" id="vision_image"
+                                                            wire:model="vision_image" style="display: none;"
+                                                            accept="image/*" />
+                                                    </div>
+                                                    @error('vision_image')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -419,7 +450,6 @@
                 <script>
                     let map, marker, autocomplete, geocoder;
 
-                    // Función para inicializar el mapa
                     async function initMap() {
                         const position = {
                             lat: {{ $latitude ?? -25.344 }},
@@ -430,7 +460,6 @@
                             Map
                         } = await google.maps.importLibrary("maps");
 
-                        // Inicializa el mapa
                         map = new Map(document.getElementById("map"), {
                             zoom: 15,
                             center: position,

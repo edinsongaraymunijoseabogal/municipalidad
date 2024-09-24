@@ -13,11 +13,14 @@ class SettingsCrud extends Component
 
     public $activeTab = 'general-settings';
 
-    public $site_logo, $new_site_logo, $site_favicon, $new_site_favicon;
+    public $site_logo, $existing_site_logo;
+    public $site_favicon, $existing_site_favicon;
+
     public $site_title, $description, $keywords, $meta_description;
 
-    public $about_us_text, $about_us_image, $new_about_us_image;
+    public $about_us_image, $existing_about_us_image;
 
+    public $about_us_text;
     public $mission, $vision, $values = [];
     public $mission_image, $existing_mission_image;
     public $vision_image, $existing_vision_image;
@@ -38,16 +41,19 @@ class SettingsCrud extends Component
     {
         $settings = Setting::all()->pluck('value', 'key');
 
-        $this->site_logo = $settings['site_logo'] ?? null;
-        $this->site_favicon = $settings['site_favicon'] ?? null;
+        //General
+        $this->existing_site_logo = $settings['site_logo'] ?? null;
+        $this->existing_site_favicon = $settings['site_favicon'] ?? null;
+
         $this->site_title = $settings['site_title'] ?? '';
         $this->description = $settings['description'] ?? '';
         $this->keywords = $settings['keywords'] ?? '';
         $this->meta_description = $settings['meta_description'] ?? '';
 
-        $this->about_us_text = $settings['about_us_text'] ?? '';
-        $this->about_us_image = $settings['about_us_image'] ?? null;
+        //About Us
+        $this->existing_about_us_image = $settings['about_us_image'] ?? null;
 
+        $this->about_us_text = $settings['about_us_text'] ?? '';
         $this->mission = $settings['mission'] ?? '';
         $this->vision = $settings['vision'] ?? '';
         $this->values = json_decode($settings['values'] ?? '[]', true);
@@ -56,6 +62,7 @@ class SettingsCrud extends Component
         $this->existing_vision_image = $settings['vision_image'] ?? null;
         $this->existing_organigram_pdf = $settings['organigram_pdf'] ?? null;
 
+        //Social Media
         $this->facebook = $settings['facebook'] ?? '';
         $this->twitter = $settings['twitter'] ?? '';
         $this->instagram = $settings['instagram'] ?? '';
@@ -63,6 +70,7 @@ class SettingsCrud extends Component
         $this->youtube = $settings['youtube'] ?? '';
         $this->tiktok = $settings['tiktok'] ?? '';
 
+        //Contact
         $this->contact_phone = $settings['contact_phone'] ?? '';
         $this->contact_email = $settings['contact_email'] ?? '';
 
@@ -70,7 +78,6 @@ class SettingsCrud extends Component
         
         $this->latitude = $settings['latitude'] ?? null;
         $this->longitude = $settings['longitude'] ?? null;
-
 
     }
 
@@ -83,17 +90,26 @@ class SettingsCrud extends Component
     {
         $this->validate([
             'site_title' => 'required|string',
-            'new_site_logo' => 'nullable|image|max:1024',
-            'new_site_favicon' => 'nullable|image|max:1024',
+            'site_logo' => 'nullable|image|max:1024',
+            'site_favicon' => 'nullable|image|max:1024',
         ]);
 
-        if ($this->new_site_logo) {
-            $this->site_logo = $this->new_site_logo->store('logos', 'public');
-            $this->updateSetting('site_logo', $this->site_logo);
+        if ($this->site_logo) {
+            if ($this->existing_site_logo) {
+                Storage::disk('public')->delete($this->existing_site_logo);
+            }
+            $site_logo_path = $this->site_logo->store('site_logos', 'public');
+            $this->updateSetting('site_logo', $site_logo_path);
+            $this->existing_site_logo = $site_logo_path;
         }
-        if ($this->new_site_favicon) {
-            $this->site_favicon = $this->new_site_favicon->store('favicons', 'public');
-            $this->updateSetting('site_favicon', $this->site_favicon);
+
+        if ($this->site_favicon) {
+            if ($this->existing_site_favicon) {
+                Storage::disk('public')->delete($this->existing_site_favicon);
+            }
+            $site_favicon_path = $this->site_favicon->store('site_favicons', 'public');
+            $this->updateSetting('site_favicon', $site_favicon_path);
+            $this->existing_site_favicon = $site_favicon_path;
         }
 
         $this->updateSetting('site_title', $this->site_title);
@@ -123,15 +139,19 @@ class SettingsCrud extends Component
             'vision' => 'nullable|string',
             'values' => 'nullable|array',
             'values.*' => 'string|max:255',
-            'new_about_us_image' => 'nullable|image|max:2048',
+            'about_us_image' => 'nullable|image|max:2048',
             'organigram_pdf' => 'nullable|file|max:4096',
             'mission_image' => 'nullable|image|max:2048',
             'vision_image' => 'nullable|image|max:2048',
         ]);
 
-        if ($this->new_about_us_image) {
-            $this->about_us_image = $this->new_about_us_image->store('about_us_images', 'public');
-            $this->updateSetting('about_us_image', $this->about_us_image);
+        if ($this->about_us_image) {
+            if ($this->existing_about_us_image){
+                Storage::disk('public')->delete($this->existing_about_us_image);
+            }
+            $about_us_image_path = $this->about_us_image->store('about_us_images', 'public');
+            $this->updateSetting('about_us_image', $about_us_image_path);
+            $this->existing_about_us_image = $about_us_image_path;
         }
 
         if ($this->mission_image) {

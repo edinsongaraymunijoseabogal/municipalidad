@@ -26,7 +26,8 @@
             <div class="d-flex flex-column align-content-end">
                 <div class="app-auth-body mx-auto">
                     <div class="app-auth-branding mb-4"><a class="app-logo" href="{{ route('web.home') }}"><img
-                                class="logo-icon me-2" src="{{ asset('images/logo.png') }}" alt="logo"></a>
+                                class="logo-icon me-2" src="{{ Storage::url(app('configService')->get('site_logo')) }}"
+                                alt="logo"></a>
                     </div>
                     <h2 class="auth-heading text-center mb-5">{{ __('Login') }}</h2>
                     <div class="auth-form-container text-start">

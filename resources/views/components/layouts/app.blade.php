@@ -17,7 +17,8 @@
     <meta property="og:image:width" content="552" />
     <meta property="og:image:height" content="310" />
     <meta itemProp="image" content="" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon"
+        href="{{ app('configService')->get('site_favicon') ? Storage::url(app('configService')->get('site_favicon')) : '/favicon.ico' }}" />
     <meta name="theme-color" content="#000000" />
     <meta name="robots" content="index, follow" />
     {{-- End Meta --}}
