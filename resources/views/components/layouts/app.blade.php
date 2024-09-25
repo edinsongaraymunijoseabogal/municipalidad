@@ -74,23 +74,24 @@
                     </li>
 
                     <!-- Dropdown Menu -->
-                    <li class="relative group">
-                        <button
-                            class="text-gray-200 hover:text-white flex items-center transition-colors duration-300 {{ request()->is('institutional*') ? 'text-white border-b-2 border-white' : '' }}">
+                    <li class="relative">
+                        <button id="institutionalMenuButton"
+                            class="text-gray-200 hover:text-white flex items-center transition-colors duration-300">
                             {{ __('Institutional') }} <i class="fas fa-caret-down ml-1"></i>
                         </button>
-                        <div
-                            class="absolute hidden group-hover:block bg-white rounded-lg shadow-lg py-2 mt-2 w-44 transition ease-in-out duration-300">
+                        <div id="institutionalDropdown"
+                            class="absolute hidden bg-white rounded-lg shadow-lg py-2 mt-2 w-44 z-50">
+                            <!-- Contenido del menú desplegable -->
                             <a href="{{ route('web.aboutUs') }}"
-                                class="block px-4 py-2 text-gray-700 hover:bg-green-600 hover:text-white transition-colors duration-300">
+                                class="block px-4 py-2 text-gray-700 hover:bg-green-600 hover:text-white">
                                 {{ __('Information') }}
                             </a>
                             <a href="{{ Storage::url(app('configService')->get('organigram_pdf')) }}" target="_blank"
-                                class="block px-4 py-2 text-gray-700 hover:bg-green-600 hover:text-white transition-colors duration-300">
+                                class="block px-4 py-2 text-gray-700 hover:bg-green-600 hover:text-white">
                                 {{ __('Organigram') }}
                             </a>
                             <a href="{{ route('web.directory') }}"
-                                class="block px-4 py-2 text-gray-700 hover:bg-green-600 hover:text-white transition-colors duration-300">
+                                class="block px-4 py-2 text-gray-700 hover:bg-green-600 hover:text-white">
                                 {{ __('Directory') }}
                             </a>
                         </div>
@@ -126,7 +127,7 @@
                 <li class="relative">
                     <!-- Dropdown Menu for Mobile -->
                     <button id="dropdownMobileLink" data-dropdown-toggle="dropdownMobile"
-                        class="w-full text-left hover:text-green-200 transition-colors duration-300 flex items-center justify-between">
+                        class="w-full text-left hover:text-green-200 transition-colors duration-300 flex items-center justify-center">
                         {{ __('Institutional') }} <i class="fas fa-caret-down ml-1"></i>
                     </button>
                     <div id="dropdownMobile" class="hidden bg-white text-gray-700 rounded-lg shadow-lg mt-2">
@@ -255,8 +256,24 @@
 
     @stack('scripts')
 
-    <!-- JavaScript to toggle mobile menu and dropdowns -->
+
     <script>
+        const institutionalMenuButton = document.getElementById('institutionalMenuButton');
+        const institutionalDropdown = document.getElementById('institutionalDropdown');
+
+        institutionalMenuButton.addEventListener('click', function(event) {
+            event.stopPropagation();
+            institutionalDropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function(event) {
+            const isClickInside = institutionalMenuButton.contains(event.target) || institutionalDropdown.contains(
+                event.target);
+
+            if (!isClickInside) {
+                institutionalDropdown.classList.add('hidden');
+            }
+        });
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
 
